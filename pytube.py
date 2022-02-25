@@ -59,7 +59,7 @@ def search(start, destination, stations, connections, lines):
             if each not in chain and each not in expired:
                 h = dist(goal, stations[each][:2])
                 d = dist(this, stations[each][:2])
-                #if line != connections[current][each]: distance *= 2
+                #if line != connections[current][each]: d *= 
                 f = d + g + h
                 line = connections[current][each]
                 chain.update({each : f})
@@ -80,24 +80,41 @@ def search(start, destination, stations, connections, lines):
     path.append(start)
     path.reverse()
     changes.reverse()
-    return path, changes
+    
+    linelist = [stations[start][2]]
+    last = changes[0]
+    count = 0
+    index = 0
+    for each in changes[1:]:
+        count += 1
+        if each != last:
+            index += count
+            linelist.append((lines[last], count, stations[path[index]][2]))
+            count = 0
+        last = each
+    linelist.append((lines[last], count+1, stations[path[-1]][2]))
 
-def crochet(inputs, stations, lines):
-    path = inputs[0]
-    changes = inputs[1]
-    line = changes[0]
-    station = path[0]
+    return linelist
+
+def crochet(inputs):
     printer = ' '
-    i = 0
-    while i < len(changes):
-        name = stations[path[i]][2]
-        colour = lines[changes[i]][2]
-        if changes[i] == changes[i-1]:
-            printer += '- '
-        else:
-            print(f"\u001b[0m{name}\x1B[38;5;{colour}m{printer}> \u001b[0m{stations[path[i+1]][2]} \x1B[38;5;{colour}m({lines[changes[i]][0]})")
-            printer = ' '
-        i += 1
+    start = inputs[0]
+    for i in inputs[1:]:
+        line = i[0]
+        stops = " -"*(i[1]-1)
+        end = i[2]
+        print(f"\u001b[0m{start}\x1B[38;5;{line[2]}m{stops} > \u001b[0m{end} \x1B[38;5;{line[2]}m({line[0]})")
+        start = end
+
+        #    end = stations[path[i+1]][2]
+    #    colour = lines[changes[i]][2]
+    #    if changes[i] == changes[i-1]:
+    #        printer += '- '
+    #    else:
+    #        print(f"\u001b[0m{start}\x1B[38;5;{colour}m{printer}> \u001b[0m{end} \x1B[38;5;{colour}m({lines[changes[i]][0]})")
+    #        start = end
+    #        printer = ' '
+    #    i += 1
 
         #if line == connections[current][choice]:
         #    printer += "-"
