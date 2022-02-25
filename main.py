@@ -1,8 +1,12 @@
+import os
 import pytube as pt
 
-stations = pt.dictify('data/stations.csv')
-lines = pt.dictify('data/lines.csv')
-connections = pt.connectify('data/connections.csv')
+
+path = __file__[:-7]
+
+stations = pt.dictify(f'{path}data/stations.csv')
+lines = pt.dictify(f'{path}data/lines.csv')
+connections = pt.connectify(f'{path}data/connections.csv')
 
 start = int(input("start station: "))
 destination = int(input("destination station: "))

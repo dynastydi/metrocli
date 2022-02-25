@@ -93,9 +93,9 @@ def crochet(inputs, stations, lines):
         name = stations[path[i]][2]
         colour = lines[changes[i]][2]
         if changes[i] == changes[i-1]:
-            printer += '-'
+            printer += '- '
         else:
-            print(f"\x1B[38;5;{15}m{name}\x1B[38;5;{colour}m{printer}> \x1B[38;5;{15}m{stations[path[i+1]][2]} \x1B[38;5;{colour}m({lines[changes[i]][0]})")
+            print(f"\u001b[0m{name}\x1B[38;5;{colour}m{printer}> \u001b[0m{stations[path[i+1]][2]} \x1B[38;5;{colour}m({lines[changes[i]][0]})")
             printer = ' '
         i += 1
 
