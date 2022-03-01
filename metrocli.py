@@ -1,13 +1,20 @@
 import math
+import interface as intf
 
 start = None
 destination = None
 
+radius = 6371       # The earth's approximate radius in km.
+
+def init(path):
+    load(path)
+    intf.init()
+
 def load(path):
     global stations, lines, connections
-    stations = dictify(f'{path}data/stations.csv')
-    lines = dictify(f'{path}data/lines.csv')
-    connections = connectify(f'{path}data/connections.csv')
+    stations = dictify('data/stations.csv')
+    lines = dictify('data/lines.csv')
+    connections = connectify('data/connections.csv')
 
 def data(inp):
     inp = inp.replace('"', '')
@@ -47,10 +54,23 @@ def connectify(csv):
             book[keyB][keyA] = datA
     return book
 
-# take 2D coordinates as tuples or lists and return distance.
+
+# take lat+long and return cartesian coordinates.
+def cart(lat, long):
+    x = radius*math.cos(lat)*math.cos(long)
+    y = radius*math.cos(lat)*math.sin(long)
+    z = radius*math.sin(lat)
+    return (x, y, z)
+
+# take lat+long of two points and return approximate direct distance.
 def dist(a, b):
-    # d**2 = (xa-xb)**2 + (ya-yb)**2
-    return math.sqrt((a[0] - b[0])**2 + (a[1] - b[1])**2)
+    
+    ca = cart(a[0], a[1])
+    cb = cart(b[0], b[1])
+
+    # euclidian distance between sets of cartesian coordinates:
+    # d**2 = (xa-xb)**2 + (ya-yb)**2 + (za-zb)**2
+    return math.sqrt((ca[0] - cb[0])**2 + (ca[1] - cb[1])**2 + (ca[2] - cb[2])**2)
 
 def search():
     global chain, history, changes  # new globals

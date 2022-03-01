@@ -1,18 +1,18 @@
 import os
-import pytube as pt
+import metrocli as mtcl
 
-intro = 'welcome to pytube! currently we only support the london tube.\nplease visit our github if you\'d like to contribute to our development.\n'
-about = 'pytube uses Stanfords 1968 A* search algorithm to choose the best possible path.\nit relies on euclidean distance between stops, rather than timetables.\nas such pytube will not always be the most practical real-world journey planner.\nthe default mode adds a penalty for each line change - use the -d flag to calculate pure distance efficiency.'
+intro = 'welcome to metrocli! currently we only support the london tube.\nplease visit our github if you\'d like to contribute to our development.\n'
+about = 'metrocli uses Stanfords 1968 A* search algorithm to choose the best possible path.\nit relies on an approximation of the direct distance between stops in three-dimensional space.\ntimetables, closures and the earth\'s deviation from spherical symmetry are among the factors not taken into account by this method.\nas such metrocli will not always be the most practical real-world journey planner.\nthe default mode adds a penalty for each line change - use the -d flag to calculate pure distance efficiency.'
 
 def init():
     print(intro)
 
-    pt.start = interpret('start station: ')
-    pt.destination = interpret('destination station: ')
+    mtcl.start = interpret('start station: ')
+    mtcl.destination = interpret('destination station: ')
 
-    print(f"\n{ pt.stations[pt.start][2] } to { pt.stations[pt.destination][2] }:\n")
-    pt.search()
-    pt.exhibit()
+    print(f"\n{ mtcl.stations[mtcl.start][2] } to { mtcl.stations[mtcl.destination][2] }:\n")
+    mtcl.search()
+    mtcl.exhibit()
 
 def interpret(text):
     valid = False
@@ -24,5 +24,4 @@ def interpret(text):
         except ValueError:
             print("oops! input not a number or valid string. please try again.")
     return out
-
-def 
+ 

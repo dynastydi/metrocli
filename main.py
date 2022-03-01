@@ -1,10 +1,7 @@
 import os
-import pytube as pt
-import interface as it
+import metrocli as mtcl
 
 path = __file__[:-7]
 
-pt.load(path)
-
-it.init()
+mtcl.init(path)
 
