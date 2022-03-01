@@ -57,9 +57,9 @@ def connectify(csv):
 
 # take lat+long and return cartesian coordinates.
 def cart(lat, long):
-    x = radius*math.cos(lat)*math.cos(long)
-    y = radius*math.cos(lat)*math.sin(long)
-    z = radius*math.sin(lat)
+    x = radius*math.cos(math.radians(lat))*math.cos(math.radians(long))
+    y = radius*math.cos(math.radians(lat))*math.sin(math.radians(long))
+    z = radius*math.sin(math.radians(lat))
     return (x, y, z)
 
 # take lat+long of two points and return approximate direct distance.
@@ -70,6 +70,7 @@ def dist(a, b):
 
     # euclidian distance between sets of cartesian coordinates:
     # d**2 = (xa-xb)**2 + (ya-yb)**2 + (za-zb)**2
+    
     return math.sqrt((ca[0] - cb[0])**2 + (ca[1] - cb[1])**2 + (ca[2] - cb[2])**2)
 
 def search():
@@ -88,6 +89,7 @@ def search():
             if each not in chain and each not in history:
                 h = dist(goal, stations[each][:2])
                 d = dist(this, stations[each][:2])
+                print(h)
                 f = d + g + h
                 line = connections[current][each]
                 chain.update({ each : f })
