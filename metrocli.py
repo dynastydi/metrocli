@@ -89,7 +89,6 @@ def search():
             if each not in chain and each not in history:
                 h = dist(goal, stations[each][:2])
                 d = dist(this, stations[each][:2])
-                print(h)
                 f = d + g + h
                 line = connections[current][each]
                 chain.update({ each : f })
