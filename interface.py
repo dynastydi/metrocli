@@ -14,8 +14,8 @@ def init():
     names = list(finder.keys())
     print(intro)
 
-    mtcl.start = interpret(input('start station: '))
-    mtcl.destination = interpret(input('destination station: '))
+    mtcl.start = interpret('start station: ')
+    mtcl.destination = interpret('destination station: ')
 
     print(f"\n{ mtcl.stations[mtcl.start][2] } to { mtcl.stations[mtcl.destination][2] }:\n")
     mtcl.search()
@@ -24,18 +24,27 @@ def init():
 def interpret(text):
     valid = False
     while not valid:
-        if not text.isdigit():
-            if not text in names:
-                comparisons = { key : similar(key, text) for key in names if key is not None }
-                best = max(comparisons, key=comparisons.get)
-                if comparisons[best] >= 0.5:
-                    print(f'did you mean {best}? (y/n)')
-                else:
-                    print('oops! couldn\'t figure that out. try again.')
-                valid = True
-
-        elif int(text) in mtcl.stations:
-            return int(text)
+        interpretee = input(text)
+        if not interpretee.isdigit():
+            if not interpretee in names:
+                comparisons = { key : similar(key, interpretee) for key in names if key is not None }
+                answered = False
+                while not answered:
+                    best = max(comparisons, key=comparisons.get)
+                    if comparisons[best] >= 0.5:
+                        ans = input(f'did you mean {best}? (y/n) ')
+                        if ans == 'y' or ans == 'Y':
+                            answered = True
+                            valid = True
+                            return finder[best]
+                        elif ans == 'n' or ans == 'N':
+                            comparisons.pop(best)
+                    else:
+                        print('oops! couldn\'t figure that out. try again.')
+                        answered = True
+        elif int(interpretee) in mtcl.stations:
+            valid = True
+            return int(interpretee)
         else:
-            print('oops! input not a number or valid string. please try again.')
+            print('not a valid station number :(')
  
