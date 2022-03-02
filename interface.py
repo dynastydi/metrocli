@@ -1,25 +1,25 @@
 import os
-import metrocli as mtcl
+import tubecli as tc
 from difflib import SequenceMatcher
 
 def similar(a, b):
     return SequenceMatcher(None, a, b).ratio()
 
-intro = 'welcome to metrocli! currently we only support the london tube.\nplease visit our github if you\'d like to contribute to our development.\n'
-about = 'metrocli uses Stanfords 1968 A* search algorithm to choose the best possible path.\nit relies on an approximation of the direct distance between stops in three-dimensional space.\ntimetables, closures and the earth\'s deviation from spherical symmetry are among the factors not taken into account by this method.\nas such metrocli will not always be the most practical real-world journey planner.\nthe default mode adds a penalty for each line change - use the -d flag to calculate pure distance efficiency.'
+intro = 'welcome to tubecli! this is a simple data-driven tool for navigating the london tube.\nplease visit our github if you\'d like to contribute to our development.\n'
+about = 'tubecli uses Stanfords 1968 A* search algorithm to choose the best possible path.\nit relies on an approximation of the direct distance between stops in three-dimensional space.\ntimetables, closures and the earth\'s deviation from spherical symmetry are among the factors not taken into account by this method.\nas such tubecli will not always be the most practical real-world journey planner.'
 
 def init():
     global finder, names
-    finder = { value[2] : key for key, value in mtcl.stations.items() }
+    finder = { value[2] : key for key, value in tc.stations.items() }
     names = list(finder.keys())
     print(intro)
 
-    mtcl.start = interpret('start station: ')
-    mtcl.destination = interpret('destination station: ')
+    tc.start = interpret('start station: ')
+    tc.destination = interpret('destination station: ')
 
-    print(f"\n{ mtcl.stations[mtcl.start][2] } to { mtcl.stations[mtcl.destination][2] }:\n")
-    mtcl.search()
-    mtcl.exhibit()
+    print(f"\n{ tc.stations[tc.start][2] } to { tc.stations[tc.destination][2] }:\n")
+    tc.search()
+    tc.exhibit()
 
 def interpret(text):
     valid = False
@@ -42,7 +42,7 @@ def interpret(text):
                     else:
                         print('oops! couldn\'t figure that out. try again.')
                         answered = True
-        elif int(interpretee) in mtcl.stations:
+        elif int(interpretee) in tc.stations:
             valid = True
             return int(interpretee)
         else:

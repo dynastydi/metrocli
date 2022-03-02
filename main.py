@@ -1,6 +1,6 @@
 import os
-import metrocli as mtcl
+import tubecli as tc
 
 path = __file__[:-7]
 
-mtcl.init(path)
+tc.init(path)
