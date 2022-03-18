@@ -1,22 +1,24 @@
 import math
 import interface as intf
 
-start = None
+start = None        # set empty globals.
 destination = None
 
-radius = 6371       # The earth's approximate radius in km.
+radius = 6371       # the earth's approximate radius in km.
 
-def init(path):
+def init(path):     # initialise interface and load data.
     load(path)
     intf.init()
 
-def load(path):
+
+
+def load(path):     # take install / execution path and find data.
     global stations, lines, connections
     stations = dictify('data/stations.csv')
     lines = dictify('data/lines.csv')
     connections = connectify('data/connections.csv')
 
-def data(inp):
+def data(inp):      # decides how to parse.
     inp = inp.replace('"', '')
     if inp.isdigit():
         inp = int(inp)
@@ -27,19 +29,18 @@ def data(inp):
             pass
     return inp
 
-def dictify(csv):
+def dictify(csv):   # generic csv -> dict function. 
     inp = open(csv, 'r').read().split('\n')
     book = {}
-    for line in inp[1:-1]:
+    for line in inp[0:-1]:
         splat = list(map(data, line.split(',')))
-        book[splat[0]] = splat[1:4]
-    book[None] = [None, None, None]
+        book[splat[0]] = splat[1:]
     return book
 
-def connectify(csv):
+def connectify(csv):# more involved dict function for adjacent connections.
     inp = open(csv, 'r').read().split('\n')
     book = {}
-    for line in inp[1:-1]:
+    for line in inp[0:-1]:
         splat = list(map(data, line.split(',')))
         keyA = splat[0]
         keyB = splat[1]
@@ -55,15 +56,13 @@ def connectify(csv):
     return book
 
 
-# take lat+long and return cartesian coordinates.
-def cart(lat, long):
+def cart(lat, long):# find rough cartesian coords from lat & long. 
     x = radius*math.cos(math.radians(lat))*math.cos(math.radians(long))
     y = radius*math.cos(math.radians(lat))*math.sin(math.radians(long))
     z = radius*math.sin(math.radians(lat))
-    return (x, y, z)
+    return (x, y, z) 
 
-# take lat+long of two points and return approximate direct distance.
-def dist(a, b):
+def dist(a, b):     # find euclidian distance from lat & long.
     
     ca = cart(a[0], a[1])
     cb = cart(b[0], b[1])
@@ -73,7 +72,7 @@ def dist(a, b):
     
     return math.sqrt((ca[0] - cb[0])**2 + (ca[1] - cb[1])**2 + (ca[2] - cb[2])**2)
 
-def search():
+def search():       # standard A* search function.
     global chain, history, changes  # new globals
     current = start
     goal = stations[destination][:2]
@@ -102,7 +101,7 @@ def search():
         chain.pop(choice)
         current = choice
     
-def extract():
+def extract():      # take relevant info about best path from searched data.
     stops = history[destination][::-1]
     journey = changes[destination][::-1]
     stops.append(destination)
@@ -117,15 +116,16 @@ def extract():
         if each != last:
             index += count
             name = stations[stops[index]][2]
-            line = lines[last][0]
-            colour = lines[last][1]
+            if last is not None: 
+                line = lines[last][0]
+                colour = lines[last][1]
             linelist.append((name, line, count, colour))
             count = 0
         last = each
         count += 1
     return linelist
 
-def exhibit():
+def exhibit():      # present extracted info.
     linelist = extract()
     last = (linelist[0][0])
     for l in linelist[1:]:

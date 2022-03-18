@@ -27,7 +27,7 @@ def interpret(text):
         interpretee = input(text)
         if not interpretee.isdigit():
             if not interpretee in names:
-                comparisons = { key : similar(key, interpretee) for key in names if key is not None }
+                comparisons = { key : similar(key, interpretee) for key in names }
                 answered = False
                 while not answered:
                     best = max(comparisons, key=comparisons.get)
